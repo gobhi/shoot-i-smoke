@@ -1,5 +1,5 @@
 // Sh**t! I Smoke
-// Copyright (C) 2018-2019  Marcelo S. Coelho, Amaury Martiny
+// Copyright (C) 2018-2020  Marcelo S. Coelho, Amaury Martiny
 
 // Sh**t! I Smoke is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Sh**t! I Smoke.  If not, see <http://www.gnu.org/licenses/>.
 
+import { stationName } from '@shootismoke/dataproviders';
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -92,9 +93,9 @@ export function Details(props: DetailsProps): React.ReactElement {
   const distance = distanceToStation(currentLocation, api, distanceUnit);
 
   const station = {
-    description: api.closestStation.name,
-    title: api.closestStation.name,
-    ...getCorrectLatLng(currentLocation, api.closestStation.gps)
+    description: stationName(api.pm25),
+    title: stationName(api.pm25),
+    ...getCorrectLatLng(currentLocation, api.pm25.coordinates)
   };
 
   return (

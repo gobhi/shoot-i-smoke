@@ -1,5 +1,5 @@
 // Sh**t! I Smoke
-// Copyright (C) 2018-2019  Marcelo S. Coelho, Amaury Martiny
+// Copyright (C) 2018-2020  Marcelo S. Coelho, Amaury Martiny
 
 // Sh**t! I Smoke is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Sh**t! I Smoke.  If not, see <http://www.gnu.org/licenses/>.
 
+import Constants from 'expo-constants';
 import React, { useContext, useEffect } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { scale } from 'react-native-size-matters';
@@ -67,7 +68,11 @@ export function ErrorScreen(props: ErrorScreenProps): React.ReactElement {
   trackScreen('ERROR');
 
   useEffect(() => {
-    if (error && !UNTRACKED_ERRORS.includes(error.message)) {
+    if (
+      Constants.manifest.releaseChannel === 'production' &&
+      error &&
+      !UNTRACKED_ERRORS.includes(error.message)
+    ) {
       Sentry.captureException(error);
     }
   }, [error]);

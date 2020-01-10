@@ -1,5 +1,5 @@
 // Sh**t! I Smoke
-// Copyright (C) 2018-2019  Marcelo S. Coelho, Amaury Martiny
+// Copyright (C) 2018-2020  Marcelo S. Coelho, Amaury Martiny
 
 // Sh**t! I Smoke is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 
 import { CreateHistoryItemInput } from '@shootismoke/graphql';
 import { gql } from 'apollo-boost';
+import * as A from 'fp-ts/lib/Array';
 import * as C from 'fp-ts/lib/Console';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as TE from 'fp-ts/lib/TaskEither';
@@ -37,23 +38,31 @@ const CREATE_HISTORY_ITEM = gql`
 export function createHistoryItem(api: Api): TE.TaskEither<Error, void> {
   return pipe(
     getOrCreateUser(),
-    TE.map<string, CreateHistoryItemInput>(userId => ({
-      rawPm25: api.pollutants.pm25.raw,
-      universalId: api.closestStation.universalId,
-      userId
-    })),
+    TE.map<string, CreateHistoryItemInput[]>(userId =>
+      api.normalized.map(measurement => ({
+        measurement,
+        userId
+      }))
+    ),
     TE.chain(
       sideEffect(input =>
         TE.rightIO(C.log(`<createHistoryItem> - ${JSON.stringify(input)}`))
       )
     ),
-    TE.chain(input =>
-      promiseToTE(async () => {
-        await client.mutate({
-          mutation: CREATE_HISTORY_ITEM,
-          variables: { input }
-        });
-      })
-    )
+    TE.chain(inputs =>
+      A.array.sequence(TE.taskEither)(
+        inputs.map(input =>
+          promiseToTE(async () => {
+            await client.mutate({
+              mutation: CREATE_HISTORY_ITEM,
+              variables: { input }
+            });
+          })
+        )
+      )
+    ),
+    TE.map(() => {
+      /* Do nothing, just have return type void */
+    })
   );
 }

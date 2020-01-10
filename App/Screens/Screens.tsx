@@ -1,5 +1,5 @@
 // Sh**t! I Smoke
-// Copyright (C) 2018-2019  Marcelo S. Coelho, Amaury Martiny
+// Copyright (C) 2018-2020  Marcelo S. Coelho, Amaury Martiny
 
 // Sh**t! I Smoke is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 // along with Sh**t! I Smoke.  If not, see <http://www.gnu.org/licenses/>.
 
 import React, { useContext } from 'react';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import {
   createAppContainer,
   CreateNavigatorConfig,
@@ -139,5 +139,10 @@ export function Screens(): React.ReactElement {
 
   const stack = renderScreen(api, error);
 
-  return <View style={theme.fullScreen}>{stack}</View>;
+  return (
+    <View style={theme.fullScreen}>
+      <StatusBar barStyle="dark-content" />
+      {stack}
+    </View>
+  );
 }

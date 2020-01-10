@@ -1,5 +1,5 @@
 // Sh**t! I Smoke
-// Copyright (C) 2018-2019  Marcelo S. Coelho, Amaury Martiny
+// Copyright (C) 2018-2020  Marcelo S. Coelho, Amaury Martiny
 
 // Sh**t! I Smoke is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ export function getOrCreateUser(): TE.TaskEither<Error, string> {
         expoInstallationId: Constants.installationId
       };
       console.log(
-        `<getOrCreateUser> - No mongoId found in AsyncStorage, creating a new user ${JSON.stringify(
+        `<createUser> - No mongoId found in AsyncStorage, creating a new user ${JSON.stringify(
           input
         )}`
       );
